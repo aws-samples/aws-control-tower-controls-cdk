@@ -27,6 +27,7 @@
 
 
 ACCOUNT_ID = "111111111111"
+ROLE_ARN = ""
 AWS_CONTROL_TOWER_REGION = "eu-west-1"
 
 # pylint: disable=duplicate-code

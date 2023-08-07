@@ -8,40 +8,40 @@ attrs==23.1.0
     # via
     #   cattrs
     #   jsii
-aws-cdk-asset-awscli-v1==2.2.195
+aws-cdk-asset-awscli-v1==2.2.200
     # via aws-cdk-lib
 aws-cdk-asset-kubectl-v20==2.1.2
     # via aws-cdk-lib
-aws-cdk-asset-node-proxy-agent-v5==2.0.165
+aws-cdk-asset-node-proxy-agent-v5==2.0.166
     # via aws-cdk-lib
-aws-cdk-lib==2.84.0
+aws-cdk-lib==2.90.0
     # via
     #   -r requirements/requirements.in
     #   cdk-nag
-boto3==1.26.155
+boto3==1.28.21
     # via -r requirements/requirements.in
-botocore==1.29.155
+botocore==1.31.21
     # via
     #   boto3
     #   s3transfer
 cattrs==23.1.2
     # via jsii
-cdk-nag==2.27.42
+cdk-nag==2.27.93
     # via -r requirements/requirements.in
-constructs==10.2.54
+constructs==10.2.69
     # via
     #   -r requirements/requirements.in
     #   aws-cdk-lib
     #   cdk-nag
-exceptiongroup==1.1.1
+exceptiongroup==1.1.2
     # via cattrs
-importlib-resources==5.12.0
+importlib-resources==6.0.1
     # via jsii
 jmespath==1.0.1
     # via
     #   boto3
     #   botocore
-jsii==1.84.0
+jsii==1.86.1
     # via
     #   aws-cdk-asset-awscli-v1
     #   aws-cdk-asset-kubectl-v20
@@ -75,7 +75,7 @@ typeguard==2.13.3
     #   cdk-nag
     #   constructs
     #   jsii
-typing-extensions==4.6.3
+typing-extensions==4.7.1
     # via
     #   cattrs
     #   jsii

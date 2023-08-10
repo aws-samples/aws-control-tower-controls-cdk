@@ -1,8 +1,5 @@
 {
-    "scripts": {
-       "preinstall": "/usr/bin/env gem install cfn-nag"
-    },
-    "dependencies": {
-       "aws-cdk": "^2.84.0"
-    }
- }
+   "dependencies": {
+      "aws-cdk": "^2.84.0"
+   }
+}

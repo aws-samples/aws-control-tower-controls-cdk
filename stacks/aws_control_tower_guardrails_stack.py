@@ -15,13 +15,16 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from typing import Dict, Generator, List
+import importlib
 
 import boto3
 from aws_cdk import Stack
 from aws_cdk.aws_controltower import CfnEnabledControl
 from constructs import Construct
 
-from constants import GUARDRAILS_CONFIGURATION
+from constants import GUARDRAILS_CONFIGURATION, AWS_CONTROL_TOWER_REGION
+
+ROLE_ARN = getattr(importlib.import_module("constants"), "ROLE_ARN", None)
 
 
 class AwsControlTowerGuardrailsStack(Stack):
@@ -77,10 +80,21 @@ class AwsControlTowerGuardrailsStack(Stack):
             Dict[str, str]: map from organizational unit arn to organizational id
         """
 
+        if ROLE_ARN != None and ROLE_ARN != "":
+            session_name = ROLE_ARN.split("/")[-1][0:64]
+            response = boto3.client("sts").assume_role(RoleArn=ROLE_ARN, RoleSessionName=session_name)
+            boto3_session = boto3.session.Session(
+                aws_access_key_id=response["Credentials"]["AccessKeyId"],
+                aws_secret_access_key=response["Credentials"]["SecretAccessKey"],
+                aws_session_token=response["Credentials"]["SessionToken"]
+            )
+            client = boto3_session.client("organizations", region_name = AWS_CONTROL_TOWER_REGION)
+        else:
+            client = boto3.client("organizations")
+
         organizational_units_arns = {}
 
         for organizational_unit_id in organizational_units_ids:
-            client = boto3.client("organizations")
 
             response = client.describe_organizational_unit(
                 OrganizationalUnitId=organizational_unit_id

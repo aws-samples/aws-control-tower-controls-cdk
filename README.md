@@ -1,4 +1,4 @@
-# Deploy and manage AWS Control Tower controls by using AWS CDK and CloudFormation
+# Deploy and manage AWS Control Tower controls by using AWS CDK and AWS CloudFormation
 
 
 - [AWS Prescriptive Guidance](#aws-prescriptive-guidance)
@@ -22,7 +22,7 @@
 
 ## AWS Prescriptive Guidance
 
-For a complete guide, prerequisites and instructions for using this AWS Prescriptive Guidance pattern, see [Deploy and manage AWS Control Tower controls by using AWS CDK and CloudFormation](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/deploy-and-manage-aws-control-tower-controls-by-using-aws-cdk-and-cloudformation.html).
+For a complete guide, prerequisites and instructions for using this AWS Prescriptive Guidance pattern, see [Deploy and manage AWS Control Tower controls by using AWS CDK and AWS CloudFormation](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/deploy-and-manage-aws-control-tower-controls-by-using-aws-cdk-and-aws-cloudformation.html).
 
 
 ## Goal
@@ -34,6 +34,8 @@ AWS Control Tower helps you implement preventive, detective, and proactive contr
 AWS Control Tower controls apply to an entire [organizational unit (OU)](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_getting-started_concepts.html#organizationalunit), and the control affects every AWS account within the OU. Therefore, when users perform any action in any account in your landing zone, the action is subject to the controls that govern the OU.
 
 Implementing AWS Control Tower controls helps establish a strong security foundation for your AWS landing zone. By using this pattern to deploy the controls as IaC through CloudFormation and AWS CDK, you can standardize the controls in your landing zone and more efficiently deploy and manage them. This solution uses [cdk_nag](https://github.com/cdklabs/cdk-nag#readme) to scan the AWS CDK application during deployment. This tool checks the application for adherence to AWS best practices.
+
+To deploy AWS Control Tower controls as IaC, you can also use HashiCorp Terraform instead of AWS CDK. For more information, see [Deploy and manage AWS Control Tower controls by using Terraform](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/deploy-and-manage-aws-control-tower-controls-by-using-terraform.html).
 
 ### Target Audience
 
@@ -145,12 +147,12 @@ The `package.json` requires `npm` to be already installed.
 
 ### Prepare to enable the controls
 
-1. Create an IAM policy in the management account with the permissions defined in IAM policy in the Additional information section. For instructions, see [Creating IAM policies](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_create.html) in the IAM documentation. Make note of the Amazon Resource Name (ARN) of the policy. The following is an example ARN.
+1. Create an IAM policy in the management account with the permissions defined in IAM policy in the [Additional information](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/deploy-and-manage-aws-control-tower-controls-by-using-aws-cdk-and-aws-cloudformation.html#deploy-and-manage-aws-control-tower-controls-by-using-aws-cdk-and-aws-cloudformation-additional) section. For instructions, see [Creating IAM policies](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_create.html) in the IAM documentation. Make note of the Amazon Resource Name (ARN) of the policy. The following is an example ARN.
     ```
     arn:aws:iam::<MANAGEMENT-ACCOUNT-ID>:policy/<POLICY-NAME>
     ```
 
-2. Create an IAM role in the management account, attach the IAM permission policy that you created in the previous step, and attach the custom trust policy in Trust policy in the Additional information section. For instructions, see [Creating a role using custom trust policies](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-custom.html) in the IAM documentation. The following is an example ARN for the new role.
+2. Create an IAM role in the management account, attach the IAM permission policy that you created in the previous step, and attach the custom trust policy in Trust policy in the [Additional information](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/deploy-and-manage-aws-control-tower-controls-by-using-aws-cdk-and-aws-cloudformation.html#deploy-and-manage-aws-control-tower-controls-by-using-aws-cdk-and-aws-cloudformation-additional) section. For instructions, see [Creating a role using custom trust policies](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-custom.html) in the IAM documentation. The following is an example ARN for the new role.
     ```
     arn:aws:iam:: MANAGEMENT-ACCOUNT-ID:role/ROLE-NAME
     ```
@@ -208,7 +210,7 @@ GUARDRAILS_CONFIGURATION = [
 
 6. In the `GUARDRAILS_CONFIGURATION` section, in the `OrganizationalUnitIds` parameter, enter the ID of the organizational unit where you want to enable the control, such as `ou-1111-11111111`. Enter the ID in double quotation marks, and separate multiple IDs with commas. For more information about how to retrieve OU IDs, see [Viewing the details of an OU](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org_details.html#orgs_view_ou).
 
-7. Save and close the constants.py file. For an example of an updated constants.py file, see the Additional information section of this pattern.
+7. Save and close the constants.py file. For an example of an updated constants.py file, see the [Additional information](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/deploy-and-manage-aws-control-tower-controls-by-using-aws-cdk-and-aws-cloudformation.html#deploy-and-manage-aws-control-tower-controls-by-using-aws-cdk-and-aws-cloudformation-additional) section of this pattern.
 
 
 ## Deployment
@@ -279,7 +281,7 @@ The following sample policy allows the minimum actions required to enable or dis
                 "organizations:ListPoliciesForTarget",
                 "organizations:ListRoots",
                 "organizations:UpdatePolicy",
-		        "ssm:GetParameters"
+                "ssm:GetParameters"
             ],
             "Resource": "*"
         }

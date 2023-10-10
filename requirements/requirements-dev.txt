@@ -7,9 +7,9 @@
 astroid==2.15.6
     # via pylint
 bandit==1.7.5
-    # via -r requirements/requirements-dev.in
+    # via -r requirements-dev.in
 black==22.12.0
-    # via -r requirements/requirements-dev.in
+    # via -r requirements-dev.in
 certifi==2023.7.22
     # via requests
 charset-normalizer==3.2.0
@@ -21,24 +21,24 @@ click==8.1.6
 colorama==0.4.6
     # via radon
 coverage==7.2.7
-    # via -r requirements/requirements-dev.in
+    # via -r requirements-dev.in
 dill==0.3.7
     # via pylint
 dparse==0.6.3
     # via safety
 flake8==3.9.2
-    # via -r requirements/requirements-dev.in
+    # via -r requirements-dev.in
 future==0.18.3
     # via radon
 gitdb==4.0.10
     # via gitpython
-gitpython==3.1.32
+gitpython==3.1.37
     # via bandit
 idna==3.4
     # via requests
 isort==5.12.0
     # via
-    #   -r requirements/requirements-dev.in
+    #   -r requirements-dev.in
     #   pylint
 lazy-object-proxy==1.9.0
     # via astroid
@@ -53,7 +53,7 @@ mccabe==0.6.1
 mdurl==0.1.2
     # via markdown-it-py
 mypy==1.4.1
-    # via -r requirements/requirements-dev.in
+    # via -r requirements-dev.in
 mypy-extensions==1.0.0
     # via
     #   black
@@ -77,7 +77,7 @@ pyflakes==2.3.1
 pygments==2.16.1
     # via rich
 pylint==2.17.5
-    # via -r requirements/requirements-dev.in
+    # via -r requirements-dev.in
 pyparsing==3.1.1
     # via packaging
 pyyaml==6.0.1
@@ -86,7 +86,7 @@ pyyaml==6.0.1
     #   xenon
 radon==5.1.0
     # via
-    #   -r requirements/requirements-dev.in
+    #   -r requirements-dev.in
     #   xenon
 requests==2.31.0
     # via
@@ -99,33 +99,25 @@ ruamel-yaml==0.17.32
 ruamel-yaml-clib==0.2.7
     # via ruamel-yaml
 safety==2.3.5
-    # via -r requirements/requirements-dev.in
+    # via -r requirements-dev.in
 six==1.16.0
     # via mando
 smmap==5.0.0
     # via gitdb
 stevedore==5.1.0
     # via bandit
-tomli==2.0.1
-    # via
-    #   black
-    #   dparse
-    #   mypy
-    #   pylint
 tomlkit==0.12.1
     # via pylint
 typing-extensions==4.7.1
-    # via
-    #   astroid
-    #   mypy
+    # via mypy
 urllib3==1.26.16
     # via
-    #   -c requirements/requirements.in
+    #   -c requirements.in
     #   requests
 wrapt==1.15.0
     # via astroid
 xenon==0.9.0
-    # via -r requirements/requirements-dev.in
+    # via -r requirements-dev.in
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

@@ -16,10 +16,10 @@ aws-cdk-asset-node-proxy-agent-v5==2.0.166
     # via aws-cdk-lib
 aws-cdk-lib==2.90.0
     # via
-    #   -r requirements/requirements.in
+    #   -r requirements.in
     #   cdk-nag
 boto3==1.28.21
-    # via -r requirements/requirements.in
+    # via -r requirements.in
 botocore==1.31.21
     # via
     #   boto3
@@ -27,14 +27,12 @@ botocore==1.31.21
 cattrs==23.1.2
     # via jsii
 cdk-nag==2.27.93
-    # via -r requirements/requirements.in
+    # via -r requirements.in
 constructs==10.2.69
     # via
-    #   -r requirements/requirements.in
+    #   -r requirements.in
     #   aws-cdk-lib
     #   cdk-nag
-exceptiongroup==1.1.2
-    # via cattrs
 importlib-resources==6.0.1
     # via jsii
 jmespath==1.0.1
@@ -76,10 +74,8 @@ typeguard==2.13.3
     #   constructs
     #   jsii
 typing-extensions==4.7.1
+    # via jsii
+urllib3==1.26.18
     # via
-    #   cattrs
-    #   jsii
-urllib3==1.26.16
-    # via
-    #   -r requirements/requirements.in
+    #   -r requirements.in
     #   botocore

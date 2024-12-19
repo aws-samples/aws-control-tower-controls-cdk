@@ -40,7 +40,7 @@ mypy --config-file .mypy.ini "${targets[@]}"
 pylint --rcfile .pylintrc "${targets[@]}"
 
 # Check dependencies for security issues (https://pyup.io/safety)
-safety check \
+safety scan \
   -r requirements/requirements.txt \
   -r requirements/requirements-dev.txt
 

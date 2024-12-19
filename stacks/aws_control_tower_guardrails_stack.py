@@ -14,15 +14,16 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from typing import Dict, Generator, List
 import importlib
+from typing import Dict, Generator, List
 
 import boto3
 from aws_cdk import Stack
 from aws_cdk.aws_controltower import CfnEnabledControl
 from constructs import Construct
 
-from constants import GUARDRAILS_CONFIGURATION, AWS_CONTROL_TOWER_REGION
+from constants import AWS_CONTROL_TOWER_REGION
+from constants import GUARDRAILS_CONFIGURATION
 
 ROLE_ARN = getattr(importlib.import_module("constants"), "ROLE_ARN", None)
 
@@ -31,7 +32,7 @@ class AwsControlTowerGuardrailsStack(Stack):
     """
     This stack manages AWS Control Tower Guardrails from
     the configuration GUARDRAILS_CONFIGURATION.
-    Guardrails format arn:aws:controltower:REGION::control/CONTROL_NAME.
+    Guardrails format arn:aws:controlcatalog:::control/<CONTROL_CATALOG_OPAQUE_ID>.
     """
 
     def __init__(  # type: ignore
@@ -80,15 +81,19 @@ class AwsControlTowerGuardrailsStack(Stack):
             Dict[str, str]: map from organizational unit arn to organizational id
         """
 
-        if ROLE_ARN != None and ROLE_ARN != "":
+        if ROLE_ARN is not None and ROLE_ARN != "":
             session_name = ROLE_ARN.split("/")[-1][0:64]
-            response = boto3.client("sts").assume_role(RoleArn=ROLE_ARN, RoleSessionName=session_name)
+            response = boto3.client("sts").assume_role(
+                RoleArn=ROLE_ARN, RoleSessionName=session_name
+            )
             boto3_session = boto3.session.Session(
                 aws_access_key_id=response["Credentials"]["AccessKeyId"],
                 aws_secret_access_key=response["Credentials"]["SecretAccessKey"],
-                aws_session_token=response["Credentials"]["SessionToken"]
+                aws_session_token=response["Credentials"]["SessionToken"],
             )
-            client = boto3_session.client("organizations", region_name = AWS_CONTROL_TOWER_REGION)
+            client = boto3_session.client(
+                "organizations", region_name=AWS_CONTROL_TOWER_REGION
+            )
         else:
             client = boto3.client("organizations")
 
@@ -99,9 +104,9 @@ class AwsControlTowerGuardrailsStack(Stack):
             response = client.describe_organizational_unit(
                 OrganizationalUnitId=organizational_unit_id
             )
-            organizational_units_arns[
-                response["OrganizationalUnit"]["Arn"]
-            ] = organizational_unit_id
+            organizational_units_arns[response["OrganizationalUnit"]["Arn"]] = (
+                organizational_unit_id
+            )
 
         return organizational_units_arns
 
@@ -133,8 +138,7 @@ class AwsControlTowerGuardrailsStack(Stack):
                         self,
                         f"CfnEnabledControl-{control_name}-{ou_id}",
                         control_identifier=(
-                            f"arn:aws:controltower:{self.region}"
-                            f"::control/{control_name}"
+                            f"arn:aws:controlcatalog:::control/{control_name}"
                         ),
                         target_identifier=organizational_unit_arn,
                     )

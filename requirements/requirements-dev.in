@@ -1,9 +1,9 @@
 -c requirements.in
 
 bandit
-black<=22.12.0 # latest version of safety requires a previous version of black
+black
 coverage
-flake8~=3.9
+flake8
 isort
 mypy
 pylint

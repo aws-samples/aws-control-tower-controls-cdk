@@ -3,7 +3,7 @@
 
 - [AWS Prescriptive Guidance](#aws-prescriptive-guidance)
 - [Goal](#goal)
-- [Prerequisites and limitations](#prerequisites-and-limitations)
+- [Prerequisites and Limitations](#prerequisites-and-limitations)
 - [Architecture](#architecture)
 - [Tools](#tools)
 - [Best practices](#best-practices)
@@ -37,15 +37,15 @@ Implementing AWS Control Tower controls helps establish a strong security founda
 
 To deploy AWS Control Tower controls as IaC, you can also use HashiCorp Terraform instead of AWS CDK. For more information, see [Deploy and manage AWS Control Tower controls by using Terraform](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/deploy-and-manage-aws-control-tower-controls-by-using-terraform.html).
 
-### Target Audience
+### Intended Audience
 
 This pattern is recommended for users who have experience with AWS Control Tower, CloudFormation, AWS CDK, and AWS Organizations.
 
-## Prerequisites and limitations
+## Prerequisites and Limitations
 
 ### Prerequisites
 
-- Active AWS accounts managed as an organization in AWS Organizations and an AWS Control Tower landing zone. For instructions, see [Create an account structure](https://www.wellarchitectedlabs.com/cost/100_labs/100_1_aws_account_setup/2_account_structure/) (AWS Well-Architected Labs).
+- Active AWS accounts managed as an organization in AWS Organizations and an AWS Control Tower landing zone. For instructions, see [Getting started](https://docs.aws.amazon.com/controltower/latest/userguide/getting-started-with-control-tower.html) in the AWS Control Tower documentation.
 
 - AWS Command Line Interface (AWS CLI), [installed](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) and [configured](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html).
 
@@ -63,6 +63,11 @@ This pattern is recommended for users who have experience with AWS Control Tower
 
 ### Limitations
 
+- For AWS Control Tower controls, this pattern requires the use of [global identifiers](https://docs.aws.amazon.com/controltower/latest/controlreference/all-global-identifiers.html) that are in the following format:
+`arn:<PARTITION>:controlcatalog:::control/<CONTROL_CATALOG_OPAQUE_ID>`
+**Note:** In most cases, the value for `<PARTITION>` is aws.
+Previous versions of this pattern used [regional identifiers](https://docs.aws.amazon.com/controltower/latest/controlreference/control-metadata-tables.html) that are no longer supported. We recommend that you migrate from regional identifiers to global identifiers. Global identifiers help you manage controls and expand the number of controls you can use.
+
 - This pattern provides instructions for deploying this solution across AWS accounts, from a deployment account to the organization’s management account. For testing purposes, you can deploy this solution directly in the management account, but instructions for this configuration are not explicitly provided.
 
 
@@ -76,7 +81,7 @@ AWS Control Tower controls are categorized according to their behavior and their
 
 There are three primary types of control behaviors:
 
-1. Preventive controls are designed to prevent actions from occurring. These are implemented with [service control policies (SCPs)](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html) in AWS Organizations. The status of a preventive control is either enforced or not enabled. Preventive controls are supported in all AWS Regions.
+1.	Preventive controls are designed to prevent actions from occurring. These are implemented with [service control policies (SCPs)](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html) or [resource control policies (RCPs)](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_rcps.html) in AWS Organizations. The status of a preventive control is either enforced or not enabled. Preventive controls are supported in all AWS Regions.
 
 2. Detective controls are designed to detect specific events when they occur and log the action in CloudTrail. These are implemented with [AWS Config rules](https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config.html). The status of a detective control is either clear, in violation, or not enabled. Detective controls apply only in those AWS Regions supported by AWS Control Tower.
 
@@ -136,7 +141,7 @@ To deploy this solution, you need
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_ct"></a> [AWS Control Tower](https://aws.amazon.com/controltower/) | >= 3.0 |
+| <a name="requirement_ct"></a> [AWS Control Tower](https://aws.amazon.com/controltower/) | >= 3.2 |
 | <a name="requirement_python"></a> [Python](https://www.python.org/) | >= 3.9 |
 | <a name="requirement_npm"></a> [npm](https://www.npmjs.com/) | >= 8.9.0 |
 
@@ -180,14 +185,14 @@ ROLE_ARN = "arn:aws:iam::111122223333:role/CT-Controls-Role"
 GUARDRAILS_CONFIGURATION = [
     {
         "Enable-Control": {
-            "AWS-GR_ENCRYPTED_VOLUMES",
+            "503uicglhjkokaajywfpt6ros",
             ...
         },
         "OrganizationalUnitIds": ["ou-1111-11111111", "ou-2222-22222222"...],
     },
     {
         "Enable-Control": {
-            "AWS-GR_SUBNET_AUTO_ASSIGN_PUBLIC_IP_DISABLED",
+            "50z1ot237wl8u1lv5ufau6qqo",
             ...
         },
         "OrganizationalUnitIds": ["ou-2222-22222222"...],
@@ -203,14 +208,15 @@ GUARDRAILS_CONFIGURATION = [
 
 4. In the `ROLE_ARN` parameter, enter the ARN of the role you created in the management account.
 
-5. In the `GUARDRAILS_CONFIGURATION` section, in the `Enable-Control` parameter, enter the control API identifiers. Enter the identifier in double quotation marks, and separate multiple identifiers with commas. Each control has a unique API identifier for each Region in which AWS Control Tower is available. To find the control identifier, do the following:
-    - In [Tables of control metadata](https://docs.aws.amazon.com/controltower/latest/userguide/control-metadata-tables.html), locate the control you want to enable.
-    - In the Control API identifiers, by Region column, locate the API identifier for the Region in which you are making the API call, such as `arn:aws:controltower:us-east-1::control/AWS-GR_ENCRYPTED_VOLUMES`.
-    - Extract the control identifier from the Regional identifier, such as `AWS-GR_ENCRYPTED_VOLUMES`.
+5. Open [All global identifiers](https://docs.aws.amazon.com/controltower/latest/controlreference/all-global-identifiers.html) in the AWS Control Tower documentation.
 
-6. In the `GUARDRAILS_CONFIGURATION` section, in the `OrganizationalUnitIds` parameter, enter the ID of the organizational unit where you want to enable the control, such as `ou-1111-11111111`. Enter the ID in double quotation marks, and separate multiple IDs with commas. For more information about how to retrieve OU IDs, see [Viewing the details of an OU](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org_details.html#orgs_view_ou).
+6. In the JSON-formatted list, locate the control that you want to implement, and then copy its global identifier (also known as the `{CONTROL_CATALOG_OPAQUE_ID}` value). For example, the global identifier for the `AWS-GR_ENCRYPTED_VOLUMES` control is `503uicglhjkokaajywfpt6ros`.
 
-7. Save and close the constants.py file. For an example of an updated constants.py file, see the [Additional information](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/deploy-and-manage-aws-control-tower-controls-by-using-aws-cdk-and-aws-cloudformation.html#deploy-and-manage-aws-control-tower-controls-by-using-aws-cdk-and-aws-cloudformation-additional) section of this pattern.
+7. In the `GUARDRAILS_CONFIGURATION` section, in the `Enable-Control` parameter, enter the global identifier that you copied. Enter the identifier in double quotation marks, and separate multiple identifiers with commas.
+
+8. In the `GUARDRAILS_CONFIGURATION` section, in the `OrganizationalUnitIds` parameter, enter the ID of the organizational unit where you want to enable the control, such as `ou-1111-11111111`. Enter the ID in double quotation marks, and separate multiple IDs with commas. For more information about how to retrieve OU IDs, see [Viewing the details of an OU](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_org_details.html#orgs_view_ou).
+
+9. Save and close the constants.py file. For an example of an updated constants.py file, see the [Additional information](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/deploy-and-manage-aws-control-tower-controls-by-using-aws-cdk-and-aws-cloudformation.html#deploy-and-manage-aws-control-tower-controls-by-using-aws-cdk-and-aws-cloudformation-additional) section of this pattern.
 
 
 ## Deployment

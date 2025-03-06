@@ -11,9 +11,9 @@ astroid==3.3.6
 authlib==1.3.2
     # via safety
 bandit==1.8.0
-    # via -r requirements/requirements-dev.in
+    # via -r requirements-dev.in
 black==24.10.0
-    # via -r requirements/requirements-dev.in
+    # via -r requirements-dev.in
 certifi==2024.12.14
     # via requests
 cffi==1.17.1
@@ -28,7 +28,7 @@ click==8.1.7
 colorama==0.4.6
     # via radon
 coverage==7.6.9
-    # via -r requirements/requirements-dev.in
+    # via -r requirements-dev.in
 cryptography==44.0.0
     # via authlib
 dill==0.3.9
@@ -40,14 +40,14 @@ dparse==0.6.4
 filelock==3.12.4
     # via safety
 flake8==7.1.1
-    # via -r requirements/requirements-dev.in
+    # via -r requirements-dev.in
 idna==3.10
     # via requests
 isort==5.13.2
     # via
-    #   -r requirements/requirements-dev.in
+    #   -r requirements-dev.in
     #   pylint
-jinja2==3.1.4
+jinja2==3.1.6
     # via safety
 mando==0.7.1
     # via radon
@@ -64,7 +64,7 @@ mccabe==0.7.0
 mdurl==0.1.2
     # via markdown-it-py
 mypy==1.13.0
-    # via -r requirements/requirements-dev.in
+    # via -r requirements-dev.in
 mypy-extensions==1.0.0
     # via
     #   black
@@ -101,14 +101,14 @@ pyflakes==3.2.0
 pygments==2.18.0
     # via rich
 pylint==3.3.2
-    # via -r requirements/requirements-dev.in
+    # via -r requirements-dev.in
 pyyaml==6.0.2
     # via
     #   bandit
     #   xenon
 radon==6.0.1
     # via
-    #   -r requirements/requirements-dev.in
+    #   -r requirements-dev.in
     #   xenon
 requests==2.32.3
     # via
@@ -126,7 +126,7 @@ ruamel-yaml==0.18.6
 ruamel-yaml-clib==0.2.12
     # via ruamel-yaml
 safety==3.2.13
-    # via -r requirements/requirements-dev.in
+    # via -r requirements-dev.in
 safety-schemas==0.0.10
     # via safety
 shellingham==1.5.4
@@ -149,11 +149,11 @@ typing-extensions==4.12.2
     #   typer
 urllib3==1.26.20
     # via
-    #   -c requirements/requirements.in
+    #   -c requirements.in
     #   requests
     #   safety
 xenon==0.9.3
-    # via -r requirements/requirements-dev.in
+    # via -r requirements-dev.in
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

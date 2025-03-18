@@ -133,7 +133,7 @@ class AwsControlTowerGuardrailsStack(Stack):
                 organizational_unit_arn,
                 ou_id,
             ) in organizational_units_arns.items():
-                for control_name in enable_guardrails:
+                for control_name in enable_guardrails.keys():
                     cfn_enabled_control = CfnEnabledControl(
                         self,
                         f"CfnEnabledControl-{control_name}-{ou_id}",
@@ -142,6 +142,8 @@ class AwsControlTowerGuardrailsStack(Stack):
                         ),
                         target_identifier=organizational_unit_arn,
                     )
+                    if enable_guardrails[control_name]:
+                        cfn_enabled_control.parameters = [ CfnEnabledControl.EnabledControlParameterProperty(key=k, value=v) for k,v in enable_guardrails[control_name].items() if v ]
                     self.cfn_enabled_controls.append(cfn_enabled_control)
 
     def add_dependencies(self) -> None:

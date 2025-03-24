@@ -133,7 +133,14 @@ class AwsControlTowerGuardrailsStack(Stack):
                 organizational_unit_arn,
                 ou_id,
             ) in organizational_units_arns.items():
-                for control_name in enable_guardrails.keys():
+                if isinstance(enable_guardrails, dict):
+                    control_names = set(enable_guardrails.keys())
+                elif isinstance(enable_guardrails, set):
+                    control_names = enable_guardrails
+                else:
+                    raise Exception("Guardrails configuration is invalid. Enable-Control is expected to be dict or set.")
+
+                for control_name in control_names:
                     cfn_enabled_control = CfnEnabledControl(
                         self,
                         f"CfnEnabledControl-{control_name}-{ou_id}",
@@ -142,7 +149,7 @@ class AwsControlTowerGuardrailsStack(Stack):
                         ),
                         target_identifier=organizational_unit_arn,
                     )
-                    if enable_guardrails[control_name]:
+                    if isinstance(enable_guardrails, dict) and enable_guardrails[control_name]:
                         cfn_enabled_control.parameters = [ CfnEnabledControl.EnabledControlParameterProperty(key=k, value=v) for k,v in enable_guardrails[control_name].items() if v ]
                     self.cfn_enabled_controls.append(cfn_enabled_control)
 

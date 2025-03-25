@@ -185,7 +185,14 @@ ROLE_ARN = "arn:aws:iam::111122223333:role/CT-Controls-Role"
 GUARDRAILS_CONFIGURATION = [
     {
         "Enable-Control": {
-            "503uicglhjkokaajywfpt6ros",
+            "503uicglhjkokaajywfpt6ros": {
+                "Parameters": {
+                    "ExemptedPrincipalArns": ["arn:aws:iam::111122223333:role/RoleName"]
+                },
+                "Tags": {
+                    "Name": "EncryptedVolumes"
+                }
+            },
             ...
         },
         "OrganizationalUnitIds": ["ou-1111-11111111", "ou-2222-22222222"...],
@@ -273,6 +280,7 @@ The following sample policy allows the minimum actions required to enable or dis
                 "controltower:DisableControl",
                 "controltower:GetControlOperation",
                 "controltower:ListEnabledControls",
+                "controltower:TagResource",
                 "organizations:AttachPolicy",
                 "organizations:CreatePolicy",
                 "organizations:DeletePolicy",

@@ -301,6 +301,7 @@ The following sample policy allows the minimum actions required to enable or dis
                 "organizations:ListChildren",
                 "organizations:ListOrganizationalUnitsForParent",
                 "organizations:ListParents",
+                "organizations:ListPolicies",
                 "organizations:ListPoliciesForTarget",
                 "organizations:ListRoots",
                 "organizations:ListTagsForResource",

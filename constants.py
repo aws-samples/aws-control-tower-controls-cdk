@@ -40,25 +40,47 @@ GUARDRAILS_CONFIGURATION = [
             "4jc77cq1lcr7g64xywwypykv8": {},  # AWS-GR_RDS_INSTANCE_PUBLIC_ACCESS_CHECK
             "1h4eyqyyonp19dlrreqf1i3w0": {},  # AWS-GR_RDS_SNAPSHOTS_PUBLIC_PROHIBITED
             "e34kieahgkm0lggs5g0s412jt": {},  # AWS-GR_RDS_STORAGE_ENCRYPTED
-            "df2ta5ytg2zatj1q7y5e09u32": {},  # AWS-GR_RESTRICTED_COMMON_PORTS
+            "df2ta5ytg2zatj1q7y5e09u32": {
+                "Tags": [{"key": "Environment", "value": "Production"}]
+            },  # AWS-GR_RESTRICTED_COMMON_PORTS
             "6rilu41n0gb9w6mxrkyewoer4": {},  # AWS-GR_RESTRICTED_SSH
             "5kvme4m5d2b4d7if2fs5yg2ui": {},  # AWS-GR_RESTRICT_ROOT_USER
             "24izmu4k16gv9tvd7sexnyrfy": {},  # AWS-GR_ROOT_ACCOUNT_MFA_ENABLED
             "8sw3pbid15t9cbww8d2w2qwgf": {},  # AWS-GR_S3_BUCKET_PUBLIC_READ_PROHIBITED
             "9j9nwxj789d82sypnukhyyowy": {},  # AWS-GR_S3_BUCKET_PUBLIC_WRITE_PROHIBITED
+            "7mo7a2h2ebsq71l8k6uzr96ou": {  # CT.S3.PV.5
+                "Tags": [{"key": "Environment", "value": "Production"}]
+            },
+            "dvhe47fxg5o6lryqrq9g6sxg4": {  # CT.SECRETSMANAGER.PV.1
+                "Tags": [{"key": "Environment", "value": "Production"}]
+            },
+            "eolw7feyvr8b4l2lfhp3bneou": {  # CT.KMS.PV.7
+                "Tags": [{"key": "Environment", "value": "Production"}]
+            },
+            "ek6wc2bmgzmho1kk6bn236mqt": {  # CT.EC2.PV.7
+                "Tags": [{"key": "Environment", "value": "Production"}]
+            },
             "ka8e3pkqefnjsxuyc26ji580": {     # CT.MULTISERVICE.PV.1
-                "AllowedRegions": ["us-east-1", "us-west-2"],
-                "ExemptedPrincipalArns": [],
-                "ExemptedActions": [],
+                "Parameters": {
+                    "AllowedRegions": ["eu-west-1", "us-east-1", "us-west-2"],
+                    "ExemptedPrincipalArns": [],
+                    "ExemptedActions": [],
+                }
             },
             "9sqqct2tcfsnr10yl4f2av1mq": {    # CT.EC2.PV.6
-                "ExemptedPrincipalArns": ["arn:aws:iam::123456789012:role/sample-role-name"],
+                "Parameters": {
+                    "ExemptedPrincipalArns": ["arn:aws:iam::*:role/AWSControlTowerExecution"],
+                }
             },
             "3zbcht7oxkzts9r1z20nz5lcw": {    # AWS-GR_RESTRICT_S3_CROSS_REGION_REPLICATION
-                "ExemptedPrincipalArns": ["arn:aws:iam::123456789012:role/sample-role-name"],
+                "Parameters": {
+                    "ExemptedPrincipalArns": ["arn:aws:iam::*:role/AWSControlTowerExecution"],
+                }
             },
             "8ui9y3oace2513xarz8aqojl7": {    # AWS-GR_RESTRICT_ROOT_USER_ACCESS_KEYS
-                "ExemptedPrincipalArns": ["arn:aws:iam::123456789012:role/sample-role-name"],
+                "Parameters": {
+                    "ExemptedPrincipalArns": ["arn:aws:iam::*:role/AWSControlTowerExecution"],
+                }
             },
         },
         "OrganizationalUnitIds": ["ou-1111-11111111"],
@@ -78,20 +100,37 @@ GUARDRAILS_CONFIGURATION = [
             "1oxkwnc4hwhi2ndv6ekwy7np7": {},  # AWS-GR_REDSHIFT_CLUSTER_PUBLIC_ACCESS_CHECK
             "6wmutsohbkwhfw6sf7cbt5e81": {},  # AWS-GR_S3_ACCOUNT_LEVEL_PUBLIC_ACCESS_BLOCKS_PERIODIC
             "66gfl06uj1v999z53szvu0exa": {},  # AWS-GR_SAGEMAKER_NOTEBOOK_NO_DIRECT_INTERNET_ACCESS
-            "dfanrd8y5p7oj8fjyugqnakfr": {},  # AWS-GR_SSM_DOCUMENT_NOT_PUBLIC
+            "dfanrd8y5p7oj8fjyugqnakfr": {
+                "Tags": [{"key": "Environment", "value": "Production"}]
+            },  # AWS-GR_SSM_DOCUMENT_NOT_PUBLIC
             "dvuaav61i5cnfazfelmvn9m6k": {    # AWS-GR_DISALLOW_CROSS_REGION_NETWORKING
-                "ExemptedPrincipalArns": ["arn:aws:iam::123456789012:role/sample-role-name"],
+                "Parameters": {
+                    "ExemptedPrincipalArns": ["arn:aws:iam::*:role/AWSControlTowerExecution"],
+                },
+                "Tags": [{"key": "Environment", "value": "Production"}]
             },
             "41ngl8m5c4eb1myoz0t707n7h": {    # AWS-GR_DISALLOW_VPC_INTERNET_ACCESS
-                "ExemptedPrincipalArns": ["arn:aws:iam::123456789012:role/sample-role-name"],
+                "Parameters": {
+                    "ExemptedPrincipalArns": ["arn:aws:iam::*:role/AWSControlTowerExecution"],
+                }
             },
             "5rlqt6yj6u0v0gb62pqdy4ae": {     # AWS-GR_DISALLOW_VPN_CONNECTIONS
-                "ExemptedPrincipalArns": ["arn:aws:iam::123456789012:role/sample-role-name"],
+                "Parameters": {
+                    "ExemptedPrincipalArns": ["arn:aws:iam::*:role/AWSControlTowerExecution"],
+                }
             },
             "4wtwsih93j7vct3k0pyvrs3e2": {    # AWS-GR_AUDIT_BUCKET_POLICY_CHANGES_PROHIBITED
-                "ExemptedPrincipalArns": ["arn:aws:iam::123456789012:role/sample-role-name"],
+                "Parameters": {
+                    "ExemptedPrincipalArns": ["arn:aws:iam::*:role/AWSControlTowerExecution"],
+                }
             },
         },
         "OrganizationalUnitIds": ["ou-2222-22222222"],
     },
+    {
+        "Enable-Control": {
+            "7z1uzm6s8qk7ym7m0sm56cq0u",  # AWS-GR_IAM_USER_MFA_ENABLED
+        },
+        "OrganizationalUnitIds": ["ou-2222-22222222"],
+    }
 ]

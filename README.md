@@ -189,9 +189,7 @@ GUARDRAILS_CONFIGURATION = [
                 "Parameters": {
                     "ExemptedPrincipalArns": ["arn:aws:iam::111122223333:role/RoleName"]
                 },
-                "Tags": {
-                    "Name": "EncryptedVolumes"
-                }
+                "Tags": [{"key": "Environment", "value": "Production"}]
             },
             ...
         },
@@ -279,21 +277,38 @@ The following sample policy allows the minimum actions required to enable or dis
                 "controltower:EnableControl",
                 "controltower:DisableControl",
                 "controltower:GetControlOperation",
+                "controltower:GetEnabledControl",
+                "controltower:ListControlOperations",
                 "controltower:ListEnabledControls",
+                "controltower:ListTagsForResource",
+                "controltower:ResetEnabledControl",
                 "controltower:TagResource",
+                "controltower:UntagResource",
+                "controltower:UpdateEnabledControl",
                 "organizations:AttachPolicy",
                 "organizations:CreatePolicy",
+                "organizations:DeleteResourcePolicy",
                 "organizations:DeletePolicy",
                 "organizations:DescribeOrganization",
                 "organizations:DescribeOrganizationalUnit",
+                "organizations:DescribePolicy",
+                "organizations:DescribeResourcePolicy",
                 "organizations:DetachPolicy",
+                "organizations:DisablePolicyType",
+                "organizations:EnablePolicyType",
                 "organizations:ListAccounts",
                 "organizations:ListAWSServiceAccessForOrganization",
                 "organizations:ListChildren",
                 "organizations:ListOrganizationalUnitsForParent",
                 "organizations:ListParents",
+                "organizations:ListPolicies",
                 "organizations:ListPoliciesForTarget",
                 "organizations:ListRoots",
+                "organizations:ListTagsForResource",
+                "organizations:ListTargetsForPolicy",
+                "organizations:TagResource",
+                "organizations:PutResourcePolicy",
+                "organizations:UntagResource",
                 "organizations:UpdatePolicy",
                 "ssm:GetParameters"
             ],

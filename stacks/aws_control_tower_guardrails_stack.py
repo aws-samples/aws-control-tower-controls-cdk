@@ -151,10 +151,10 @@ class AwsControlTowerGuardrailsStack(Stack):
                         target_identifier=organizational_unit_arn,
                     )
                     if isinstance(enable_guardrails, dict) and enable_guardrails[control_name]:
-                        if enable_guardrails[control_name]["Parameters"]:
+                        if "Parameters" in enable_guardrails[control_name]:
                             cfn_enabled_control.parameters = [ CfnEnabledControl.EnabledControlParameterProperty(key=k, value=v) for k,v in enable_guardrails[control_name]["Parameters"].items() if v ]
-                        if enable_guardrails[control_name]["Tags"]:
-                            cfn_enabled_control.tags = [ CfnTag(key=k, value=v) for k,v in enable_guardrails[control_name]["Tags"].items() if v ]
+                        if "Tags" in enable_guardrails[control_name]:
+                            cfn_enabled_control.tags = [ CfnTag(key=tag["key"], value=tag["value"]) for tag in enable_guardrails[control_name]["Tags"]]
                     self.cfn_enabled_controls.append(cfn_enabled_control)
 
     def add_dependencies(self) -> None:
@@ -164,10 +164,10 @@ class AwsControlTowerGuardrailsStack(Stack):
         """
 
         # Split the API calls in concurrent chunks
-        if len(self.cfn_enabled_controls) % 10 == 0:
-            num_chunks = len(self.cfn_enabled_controls) // 10
+        if len(self.cfn_enabled_controls) % 100 == 0:
+            num_chunks = len(self.cfn_enabled_controls) // 100
         else:
-            num_chunks = len(self.cfn_enabled_controls) // 10 + 1
+            num_chunks = len(self.cfn_enabled_controls) // 100 + 1
 
         for chunk in self.chunks(self.cfn_enabled_controls, num_chunks):
 

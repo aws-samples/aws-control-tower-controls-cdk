@@ -16,6 +16,7 @@
 - [Useful Commands](#useful-commands)
 - [IAM policy](#iam-policy)
 - [Trust policy](#trust-policy)
+- [AWS Control Catalog](#aws-control-catalog)
 - [Authors](#authors)
 - [Security](#security)
 - [License](#license)
@@ -339,6 +340,10 @@ The following custom trust policy allows a specific IAM role in the deployment a
     ]
 }
 ```
+
+## AWS Control Catalog
+
+An example of exported controls using the AWS Control Catalog API is provided in the helpers folder [here](helpers/controlcatalog_list_controls.csv).
 
 ## Authors
 

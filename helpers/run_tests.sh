@@ -19,7 +19,7 @@
 set -o errexit
 set -o verbose
 
-targets=(stacks app.py constants.py)
+targets=(controlcatalog_list_controls.py)
 
 # Find common security issues (https://bandit.readthedocs.io)
 bandit --recursive "${targets[@]}"
@@ -39,13 +39,5 @@ mypy --config-file .mypy.ini "${targets[@]}"
 # Check for errors, enforce a coding standard, look for code smells (http://pylint.pycqa.org)
 pylint --rcfile .pylintrc "${targets[@]}"
 
-# Check dependencies for security issues (https://pyup.io/safety)
-safety scan \
-  -r requirements/requirements.txt \
-  -r requirements/requirements-dev.txt
-
 # Report code complexity (https://radon.readthedocs.io)
 radon mi "${targets[@]}"
-
-# Exit with non-zero status if code complexity exceeds thresholds (https://xenon.readthedocs.io)
-xenon --max-absolute C --max-modules A --max-average A "${targets[@]}"

@@ -16,6 +16,7 @@
 - [Useful Commands](#useful-commands)
 - [IAM policy](#iam-policy)
 - [Trust policy](#trust-policy)
+- [AWS Control Catalog](#aws-control-catalog)
 - [Authors](#authors)
 - [Security](#security)
 - [License](#license)
@@ -185,7 +186,7 @@ ROLE_ARN = "arn:aws:iam::111122223333:role/CT-Controls-Role"
 GUARDRAILS_CONFIGURATION = [
     {
         "Enable-Control": {
-            "503uicglhjkokaajywfpt6ros": {
+            "dvuaav61i5cnfazfelmvn9m6k": {  # AWS-GR_DISALLOW_CROSS_REGION_NETWORKING
                 "Parameters": {
                     "ExemptedPrincipalArns": ["arn:aws:iam::111122223333:role/RoleName"]
                 },
@@ -197,7 +198,7 @@ GUARDRAILS_CONFIGURATION = [
     },
     {
         "Enable-Control": {
-            "50z1ot237wl8u1lv5ufau6qqo",
+            "50z1ot237wl8u1lv5ufau6qqo",  # AWS-GR_SUBNET_AUTO_ASSIGN_PUBLIC_IP_DISABLED
             ...
         },
         "OrganizationalUnitIds": ["ou-2222-22222222"...],
@@ -339,6 +340,10 @@ The following custom trust policy allows a specific IAM role in the deployment a
     ]
 }
 ```
+
+## AWS Control Catalog
+
+An example of exported controls using the AWS Control Catalog API is provided in the helpers folder [here](helpers/controlcatalog_list_controls.csv).
 
 ## Authors
 

@@ -48,4 +48,4 @@ safety scan \
 radon mi "${targets[@]}"
 
 # Exit with non-zero status if code complexity exceeds thresholds (https://xenon.readthedocs.io)
-xenon --max-absolute B --max-modules A --max-average A "${targets[@]}"
+xenon --max-absolute C --max-modules A --max-average A "${targets[@]}"

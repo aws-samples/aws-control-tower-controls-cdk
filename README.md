@@ -185,7 +185,7 @@ ROLE_ARN = "arn:aws:iam::111122223333:role/CT-Controls-Role"
 GUARDRAILS_CONFIGURATION = [
     {
         "Enable-Control": {
-            "503uicglhjkokaajywfpt6ros": {
+            "dvuaav61i5cnfazfelmvn9m6k": {  # AWS-GR_DISALLOW_CROSS_REGION_NETWORKING
                 "Parameters": {
                     "ExemptedPrincipalArns": ["arn:aws:iam::111122223333:role/RoleName"]
                 },
@@ -197,7 +197,7 @@ GUARDRAILS_CONFIGURATION = [
     },
     {
         "Enable-Control": {
-            "50z1ot237wl8u1lv5ufau6qqo",
+            "50z1ot237wl8u1lv5ufau6qqo",  # AWS-GR_SUBNET_AUTO_ASSIGN_PUBLIC_IP_DISABLED
             ...
         },
         "OrganizationalUnitIds": ["ou-2222-22222222"...],

@@ -18,9 +18,9 @@ import importlib
 from typing import Dict, Generator, List
 
 import boto3
+from aws_cdk import CfnTag
 from aws_cdk import Stack
 from aws_cdk.aws_controltower import CfnEnabledControl
-from aws_cdk import CfnTag
 from constructs import Construct
 
 from constants import AWS_CONTROL_TOWER_REGION
@@ -37,7 +37,7 @@ class AwsControlTowerGuardrailsStack(Stack):
     """
 
     def __init__(  # type: ignore
-            self, scope: Construct, construct_id: str, **kwargs
+        self, scope: Construct, construct_id: str, **kwargs
     ) -> None:
         """
         Initialize the stack that manages AWS Control Tower Guardrails.
@@ -52,7 +52,7 @@ class AwsControlTowerGuardrailsStack(Stack):
         self.add_dependencies()
 
     def chunks(
-            self, input_list: List[CfnEnabledControl], num: int
+        self, input_list: List[CfnEnabledControl], num: int
     ) -> Generator[List[CfnEnabledControl], None, None]:
         """
         Yield successive n-sized chunks from an input list.
@@ -70,7 +70,7 @@ class AwsControlTowerGuardrailsStack(Stack):
             yield input_list[i : i + num]
 
     def get_organizational_unit_arns(
-            self, organizational_units_ids: List[str]
+        self, organizational_units_ids: List[str]
     ) -> Dict[str, str]:
         """
         Get organizational unit arn from the id.
@@ -131,15 +131,18 @@ class AwsControlTowerGuardrailsStack(Stack):
             )
 
             for (
-                    organizational_unit_arn,
-                    ou_id,
+                organizational_unit_arn,
+                ou_id,
             ) in organizational_units_arns.items():
                 if isinstance(enable_guardrails, dict):
                     control_names = set(enable_guardrails.keys())
                 elif isinstance(enable_guardrails, set):
                     control_names = enable_guardrails
                 else:
-                    raise Exception("Guardrails configuration is invalid. Enable-Control is expected to be dict or set.")
+                    raise ValueError(
+                        "Guardrails configuration is invalid."
+                        " Enable-Control is expected to be dict or set."
+                    )
 
                 for control_name in control_names:
                     cfn_enabled_control = CfnEnabledControl(
@@ -150,11 +153,25 @@ class AwsControlTowerGuardrailsStack(Stack):
                         ),
                         target_identifier=organizational_unit_arn,
                     )
-                    if isinstance(enable_guardrails, dict) and enable_guardrails[control_name]:
+                    if (
+                        isinstance(enable_guardrails, dict)
+                        and enable_guardrails[control_name]
+                    ):
                         if "Parameters" in enable_guardrails[control_name]:
-                            cfn_enabled_control.parameters = [ CfnEnabledControl.EnabledControlParameterProperty(key=k, value=v) for k,v in enable_guardrails[control_name]["Parameters"].items() if v ]
+                            cfn_enabled_control.parameters = [
+                                CfnEnabledControl.EnabledControlParameterProperty(
+                                    key=k, value=v
+                                )
+                                for k, v in enable_guardrails[control_name][
+                                    "Parameters"
+                                ].items()
+                                if v
+                            ]
                         if "Tags" in enable_guardrails[control_name]:
-                            cfn_enabled_control.tags = [ CfnTag(key=tag["key"], value=tag["value"]) for tag in enable_guardrails[control_name]["Tags"]]
+                            cfn_enabled_control.tags = [
+                                CfnTag(key=tag["key"], value=tag["value"])
+                                for tag in enable_guardrails[control_name]["Tags"]
+                            ]
                     self.cfn_enabled_controls.append(cfn_enabled_control)
 
     def add_dependencies(self) -> None:

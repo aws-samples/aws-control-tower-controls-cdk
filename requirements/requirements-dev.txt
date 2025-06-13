@@ -11,9 +11,9 @@ astroid==3.3.9
 authlib==1.5.2
     # via safety
 bandit==1.8.3
-    # via -r requirements/requirements-dev.in
+    # via -r requirements-dev.in
 black==25.1.0
-    # via -r requirements/requirements-dev.in
+    # via -r requirements-dev.in
 certifi==2025.1.31
     # via requests
 cffi==1.17.1
@@ -29,7 +29,7 @@ click==8.1.8
 colorama==0.4.6
     # via radon
 coverage==7.8.0
-    # via -r requirements/requirements-dev.in
+    # via -r requirements-dev.in
 cryptography==44.0.2
     # via authlib
 dill==0.3.9
@@ -41,12 +41,12 @@ dparse==0.6.4
 filelock==3.16.1
     # via safety
 flake8==7.2.0
-    # via -r requirements/requirements-dev.in
+    # via -r requirements-dev.in
 idna==3.10
     # via requests
 isort==6.0.1
     # via
-    #   -r requirements/requirements-dev.in
+    #   -r requirements-dev.in
     #   pylint
 jinja2==3.1.6
     # via safety
@@ -67,7 +67,7 @@ mccabe==0.7.0
 mdurl==0.1.2
     # via markdown-it-py
 mypy==1.15.0
-    # via -r requirements/requirements-dev.in
+    # via -r requirements-dev.in
 mypy-extensions==1.0.0
     # via
     #   black
@@ -106,18 +106,18 @@ pyflakes==3.3.2
 pygments==2.19.1
     # via rich
 pylint==3.3.6
-    # via -r requirements/requirements-dev.in
+    # via -r requirements-dev.in
 pyyaml==6.0.2
     # via
     #   bandit
     #   xenon
 radon==6.0.1
     # via
-    #   -r requirements/requirements-dev.in
+    #   -r requirements-dev.in
     #   xenon
 regex==2024.11.6
     # via nltk
-requests==2.32.3
+requests==2.32.4
     # via
     #   safety
     #   xenon
@@ -130,7 +130,7 @@ ruamel-yaml==0.18.10
     #   safety
     #   safety-schemas
 safety==3.3.1
-    # via -r requirements/requirements-dev.in
+    # via -r requirements-dev.in
 safety-schemas==0.0.11
     # via safety
 shellingham==1.5.4
@@ -155,10 +155,10 @@ typing-extensions==4.13.2
     #   typer
 urllib3==1.26.20
     # via
-    #   -c /Users/igirardi/Desktop/Desktop/APG-2025-CT-Update/PR-12-CDK/aws-control-tower-controls-cdk/GitHub-Temp/aws-control-tower-controls-cdk/requirements/requirements.in
+    #   -c requirements.in
     #   requests
 xenon==0.9.3
-    # via -r requirements/requirements-dev.in
+    # via -r requirements-dev.in
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

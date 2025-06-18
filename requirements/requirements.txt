@@ -16,10 +16,10 @@ aws-cdk-cloud-assembly-schema==41.2.0
     # via aws-cdk-lib
 aws-cdk-lib==2.189.0
     # via
-    #   -r requirements/requirements.in
+    #   -r requirements.in
     #   cdk-nag
 boto3==1.37.32
-    # via -r requirements/requirements.in
+    # via -r requirements.in
 botocore==1.37.32
     # via
     #   boto3
@@ -27,10 +27,10 @@ botocore==1.37.32
 cattrs==24.1.3
     # via jsii
 cdk-nag==2.35.68
-    # via -r requirements/requirements.in
+    # via -r requirements.in
 constructs==10.4.2
     # via
-    #   -r requirements/requirements.in
+    #   -r requirements.in
     #   aws-cdk-lib
     #   cdk-nag
 importlib-resources==6.5.2
@@ -75,7 +75,7 @@ typeguard==2.13.3
     #   jsii
 typing-extensions==4.13.2
     # via jsii
-urllib3==1.26.20
+urllib3==2.5.0
     # via
-    #   -r requirements/requirements.in
+    #   -r requirements.in
     #   botocore

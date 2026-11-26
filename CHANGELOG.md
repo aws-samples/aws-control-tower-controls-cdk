@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Scope the sample IAM policy write and delete actions to specific enabled control, organization policy, root, and OU ARNs
 - Add an `aws:PrincipalOrgID` condition to the sample trust policy and remove the empty `Condition` block
 - Replace hardcoded account IDs in the README examples with placeholders
+- Upgrade Python dependencies and the AWS CDK CLI to fix known vulnerabilities
+- Remove the `urllib3<2` constraint and pin `cdk-nag<3` to keep the `Aspects` API
+- Replace `safety` with `pip-audit` for dependency vulnerability checks
 
 ## [2.0.0] - 2024-12-19
 ### Breaking Changes

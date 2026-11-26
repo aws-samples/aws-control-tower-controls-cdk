@@ -39,8 +39,8 @@ mypy --config-file .mypy.ini "${targets[@]}"
 # Check for errors, enforce a coding standard, look for code smells (http://pylint.pycqa.org)
 pylint --rcfile .pylintrc "${targets[@]}"
 
-# Check dependencies for security issues (https://pyup.io/safety)
-safety scan \
+# Check dependencies for known vulnerabilities (https://pypi.org/project/pip-audit)
+pip-audit --no-deps --disable-pip \
   -r requirements/requirements.txt \
   -r requirements/requirements-dev.txt
 

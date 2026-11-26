@@ -6,7 +6,7 @@ coverage
 flake8
 isort
 mypy
+pip-audit
 pylint
 radon
-safety
 xenon

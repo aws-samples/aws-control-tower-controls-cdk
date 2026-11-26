@@ -1,5 +1,4 @@
 aws-cdk-lib
 constructs
-urllib3<2
 boto3
-cdk-nag
+cdk-nag<3

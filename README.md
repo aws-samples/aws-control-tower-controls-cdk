@@ -116,7 +116,7 @@ Control guidance refers to the recommended practice for how to apply each contro
 
 ## Best practices
 
-- Adhere to the [principle of least-privilege](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#grant-least-privilege) (IAM documentation). The sample IAM policy and trust policy provided in this pattern include the minimum permissions required, and the AWS CDK stacks created in the management account are restricted by these permissions.
+- Adhere to the [principle of least-privilege](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#grant-least-privilege) (IAM documentation). The sample IAM policy provided in this pattern scopes write and delete actions to the enabled controls, organization policies, and OUs that the pattern manages, and the sample trust policy restricts role assumption to a specific role in your organization. The AWS CDK stacks created in the management account are restricted by these permissions. Before you use the policies in production, validate them in a non-production environment and remove any permissions that your use case doesn't need.
 
 - Adhere to the [Best practices for AWS Control Tower administrators](https://docs.aws.amazon.com/controltower/latest/userguide/best-practices.html) (AWS Control Tower documentation).
 
@@ -160,7 +160,7 @@ The `package.json` requires `npm` to be already installed.
 
 2. Create an IAM role in the management account, attach the IAM permission policy that you created in the previous step, and attach the custom trust policy in Trust policy in the [Additional information](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/deploy-and-manage-aws-control-tower-controls-by-using-aws-cdk-and-aws-cloudformation.html#deploy-and-manage-aws-control-tower-controls-by-using-aws-cdk-and-aws-cloudformation-additional) section. For instructions, see [Creating a role using custom trust policies](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-custom.html) in the IAM documentation. The following is an example ARN for the new role.
     ```
-    arn:aws:iam:: MANAGEMENT-ACCOUNT-ID:role/ROLE-NAME
+    arn:aws:iam::<MANAGEMENT-ACCOUNT-ID>:role/<ROLE-NAME>
     ```
 
 3. In the management account, assume a role that has permissions to bootstrap AWS CDK.
@@ -180,15 +180,15 @@ The `package.json` requires `npm` to be already installed.
 ### Controls Configuration File
 The following is an example of an updated constants.py file.
 ```
-ACCOUNT_ID = 111122223333
-AWS_CONTROL_TOWER_REGION = us-east-2
-ROLE_ARN = "arn:aws:iam::111122223333:role/CT-Controls-Role"
+ACCOUNT_ID = "<MANAGEMENT-ACCOUNT-ID>"
+AWS_CONTROL_TOWER_REGION = "<AWS-CONTROL-TOWER-REGION>"
+ROLE_ARN = "arn:aws:iam::<MANAGEMENT-ACCOUNT-ID>:role/<ROLE-NAME>"
 GUARDRAILS_CONFIGURATION = [
     {
         "Enable-Control": {
             "dvuaav61i5cnfazfelmvn9m6k": {  # AWS-GR_DISALLOW_CROSS_REGION_NETWORKING
                 "Parameters": {
-                    "ExemptedPrincipalArns": ["arn:aws:iam::111122223333:role/RoleName"]
+                    "ExemptedPrincipalArns": ["arn:aws:iam::<ACCOUNT-ID>:role/<ROLE-NAME>"]
                 },
                 "Tags": [{"key": "Environment", "value": "Production"}]
             },
@@ -267,53 +267,145 @@ GUARDRAILS_CONFIGURATION = [
 
 ## IAM policy
 
-The following sample policy allows the minimum actions required to enable or disable AWS Control Tower controls when deploying AWS CDK stacks from a deployment account to the management account.
+The following sample policy grants the permissions required to enable, update, and disable AWS Control Tower controls when deploying AWS CDK stacks from a deployment account to the management account. Write and delete actions are scoped to the enabled controls in your AWS Control Tower Region, the service control policies (SCPs) and resource control policies (RCPs) in your organization, and the organizational units (OUs) that you target. Replace the following:
+- `<MANAGEMENT-ACCOUNT-ID>` is the ID of the organization's management account.
+- `<AWS-CONTROL-TOWER-REGION>` is the AWS Region where AWS Control Tower is deployed.
+- `<ORGANIZATION-ID>` is the ID of your organization, such as `o-a1b2c3d4e5`. For more information, see [Viewing details about your organization](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_view_org.html).
+- `<ROOT-ID>` is the ID of the organization root, such as `r-a1b2`.
+- `<OU-ID>` is the ID of an OU where you enable controls, such as `ou-1111-11111111`. Add one ARN for each OU that is listed in `OrganizationalUnitIds` in the `constants.py` file.
+
+Some actions keep `"Resource": "*"` because the service doesn't support resource-level permissions for them. These actions are grouped in the `ControlTowerNoResourceLevelSupport` and `OrganizationsNoResourceLevelSupport` statements. For details, see [Actions, resources, and condition keys for AWS Control Tower](https://docs.aws.amazon.com/service-authorization/latest/reference/list_awscontroltower.html) and [Actions, resources, and condition keys for AWS Organizations](https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsorganizations.html).
+
 ```
 {
     "Version": "2012-10-17",
     "Statement": [
         {
+            "Sid": "ControlTowerManageEnabledControls",
             "Effect": "Allow",
             "Action": [
-                "controltower:EnableControl",
                 "controltower:DisableControl",
-                "controltower:GetControlOperation",
+                "controltower:EnableControl",
                 "controltower:GetEnabledControl",
-                "controltower:ListControlOperations",
-                "controltower:ListEnabledControls",
                 "controltower:ListTagsForResource",
                 "controltower:ResetEnabledControl",
                 "controltower:TagResource",
                 "controltower:UntagResource",
-                "controltower:UpdateEnabledControl",
+                "controltower:UpdateEnabledControl"
+            ],
+            "Resource": "arn:aws:controltower:<AWS-CONTROL-TOWER-REGION>:<MANAGEMENT-ACCOUNT-ID>:enabledcontrol/*"
+        },
+        {
+            "Sid": "ControlTowerNoResourceLevelSupport",
+            "Effect": "Allow",
+            "Action": [
+                "controltower:GetControlOperation",
+                "controltower:ListControlOperations",
+                "controltower:ListEnabledControls"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "OrganizationsManageControlPolicies",
+            "Effect": "Allow",
+            "Action": [
                 "organizations:AttachPolicy",
                 "organizations:CreatePolicy",
-                "organizations:DeleteResourcePolicy",
                 "organizations:DeletePolicy",
-                "organizations:DescribeOrganization",
-                "organizations:DescribeOrganizationalUnit",
                 "organizations:DescribePolicy",
-                "organizations:DescribeResourcePolicy",
                 "organizations:DetachPolicy",
+                "organizations:ListTargetsForPolicy",
+                "organizations:UpdatePolicy"
+            ],
+            "Resource": [
+                "arn:aws:organizations::<MANAGEMENT-ACCOUNT-ID>:policy/<ORGANIZATION-ID>/service_control_policy/*",
+                "arn:aws:organizations::<MANAGEMENT-ACCOUNT-ID>:policy/<ORGANIZATION-ID>/resource_control_policy/*",
+                "arn:aws:organizations::<MANAGEMENT-ACCOUNT-ID>:ou/<ORGANIZATION-ID>/<OU-ID>"
+            ],
+            "Condition": {
+                "StringEquals": {
+                    "organizations:PolicyType": [
+                        "SERVICE_CONTROL_POLICY",
+                        "RESOURCE_CONTROL_POLICY"
+                    ]
+                }
+            }
+        },
+        {
+            "Sid": "OrganizationsTagControlPolicies",
+            "Effect": "Allow",
+            "Action": [
+                "organizations:ListTagsForResource",
+                "organizations:TagResource",
+                "organizations:UntagResource"
+            ],
+            "Resource": [
+                "arn:aws:organizations::<MANAGEMENT-ACCOUNT-ID>:policy/<ORGANIZATION-ID>/service_control_policy/*",
+                "arn:aws:organizations::<MANAGEMENT-ACCOUNT-ID>:policy/<ORGANIZATION-ID>/resource_control_policy/*"
+            ]
+        },
+        {
+            "Sid": "OrganizationsManagePolicyTypesOnRoot",
+            "Effect": "Allow",
+            "Action": [
                 "organizations:DisablePolicyType",
-                "organizations:EnablePolicyType",
-                "organizations:ListAccounts",
-                "organizations:ListAWSServiceAccessForOrganization",
+                "organizations:EnablePolicyType"
+            ],
+            "Resource": "arn:aws:organizations::<MANAGEMENT-ACCOUNT-ID>:root/<ORGANIZATION-ID>/<ROOT-ID>",
+            "Condition": {
+                "StringEquals": {
+                    "organizations:PolicyType": [
+                        "SERVICE_CONTROL_POLICY",
+                        "RESOURCE_CONTROL_POLICY"
+                    ]
+                }
+            }
+        },
+        {
+            "Sid": "OrganizationsManageResourcePolicy",
+            "Effect": "Allow",
+            "Action": [
+                "organizations:PutResourcePolicy"
+            ],
+            "Resource": "arn:aws:organizations::<MANAGEMENT-ACCOUNT-ID>:resourcepolicy/<ORGANIZATION-ID>/*"
+        },
+        {
+            "Sid": "OrganizationsReadStructure",
+            "Effect": "Allow",
+            "Action": [
+                "organizations:DescribeOrganizationalUnit",
                 "organizations:ListChildren",
                 "organizations:ListOrganizationalUnitsForParent",
                 "organizations:ListParents",
+                "organizations:ListPoliciesForTarget"
+            ],
+            "Resource": [
+                "arn:aws:organizations::<MANAGEMENT-ACCOUNT-ID>:root/<ORGANIZATION-ID>/*",
+                "arn:aws:organizations::<MANAGEMENT-ACCOUNT-ID>:ou/<ORGANIZATION-ID>/*",
+                "arn:aws:organizations::<MANAGEMENT-ACCOUNT-ID>:account/<ORGANIZATION-ID>/*"
+            ]
+        },
+        {
+            "Sid": "OrganizationsNoResourceLevelSupport",
+            "Effect": "Allow",
+            "Action": [
+                "organizations:DeleteResourcePolicy",
+                "organizations:DescribeOrganization",
+                "organizations:DescribeResourcePolicy",
+                "organizations:ListAccounts",
+                "organizations:ListAWSServiceAccessForOrganization",
                 "organizations:ListPolicies",
-                "organizations:ListPoliciesForTarget",
-                "organizations:ListRoots",
-                "organizations:ListTagsForResource",
-                "organizations:ListTargetsForPolicy",
-                "organizations:TagResource",
-                "organizations:PutResourcePolicy",
-                "organizations:UntagResource",
-                "organizations:UpdatePolicy",
-                "ssm:GetParameters"
+                "organizations:ListRoots"
             ],
             "Resource": "*"
+        },
+        {
+            "Sid": "CdkBootstrapVersionLookup",
+            "Effect": "Allow",
+            "Action": [
+                "ssm:GetParameters"
+            ],
+            "Resource": "arn:aws:ssm:<AWS-CONTROL-TOWER-REGION>:<MANAGEMENT-ACCOUNT-ID>:parameter/cdk-bootstrap/*"
         }
     ]
 }
@@ -321,21 +413,26 @@ The following sample policy allows the minimum actions required to enable or dis
 
 ## Trust policy
 
-The following custom trust policy allows a specific IAM role in the deployment account to assume the IAM role in the management account. Replace the following:
-- `<DEPLOYMENT-ACCOUNT-ID>` is the ID of the deployment account
-- `<DEPLOYMENT-ROLE-NAME>` is the name of the role in the deployment account that is allowed to assume the role in the management account 
+The following custom trust policy allows only a specific IAM role in the deployment account to assume the IAM role in the management account. The `aws:PrincipalOrgID` condition also requires the calling role to belong to your organization. Replace the following:
+- `<DEPLOYMENT-ACCOUNT-ID>` is the ID of the deployment account.
+- `<DEPLOYMENT-ROLE-NAME>` is the name of the role in the deployment account that is allowed to assume the role in the management account.
+- `<ORGANIZATION-ID>` is the ID of your organization, such as `o-a1b2c3d4e5`.
 
 ```
 {
-    “Version”: “2012-10-17”,
-    “Statement”: [
+    "Version": "2012-10-17",
+    "Statement": [
         {
-            “Effect”: “Allow”,
-            “Principal”: {
-                “AWS”: “arn:aws:iam::<DEPLOYMENT-ACCOUNT-ID>:role/<DEPLOYMENT-ROLE-NAME>”
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::<DEPLOYMENT-ACCOUNT-ID>:role/<DEPLOYMENT-ROLE-NAME>"
             },
-            “Action”: “sts:AssumeRole”,
-            “Condition”: {}
+            "Action": "sts:AssumeRole",
+            "Condition": {
+                "StringEquals": {
+                    "aws:PrincipalOrgID": "<ORGANIZATION-ID>"
+                }
+            }
         }
     ]
 }
